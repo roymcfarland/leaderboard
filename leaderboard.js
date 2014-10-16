@@ -2,6 +2,7 @@
 // it is backed by a MongoDB collection named "players".
 
 Players = new Mongo.Collection("players");
+Connections = new Mongo.Collection("connections");
 
 if (Meteor.isClient) {
   Template.leaderboard.helpers({
@@ -47,6 +48,10 @@ if (Meteor.isClient) {
   Template.add_player.events({
     'submit .addForm': function (e) {
       e.preventDefault();
+      var points = $('.points_input').val();
+      if (points.toLowerCase() === 'infinity' || points.toLowerCase() === '-infinity' || !parseInt(points)) {
+        window.location.href='https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+      }
       Players.insert({
         name: $('.name_input').val(),
         score: Number($('.points_input').val())
@@ -59,10 +64,14 @@ if (Meteor.isClient) {
       Session.set("selected_player", this._id);
     }
   });
+
 }
 
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
+  Meteor.onConnection(function(c) {
+    Connections.insert({time: new Date(), ip: c.clientAddress})
+  });
   Meteor.startup(function () {
     if (Players.find().count() === 0) {
       var names = ["Ada Lovelace",
