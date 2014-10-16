@@ -1,0 +1,50 @@
+<head>
+  <title>Leaderboard</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+
+<body>
+  <h1 class="bigHeader">SCOREBOARD</h1>
+  <div class="outer">
+    {{> leaderboard}}
+  </div>
+</body>
+
+<template name="leaderboard">
+  <div class="leaderboard">
+    {{#each players}}
+      {{> player}}
+    {{/each}}
+  </div>
+
+  {{#if selected_name}}
+  <div class="details">
+    <div class="name">{{selected_name}}</div>
+    <button class="btn btn-default inc">+5 points</button>
+    <button class="btn btn-default dcr">-5 points</button>
+    <button class="btn btn-danger rmv">Remove Scientist</button>
+  </div>
+  {{else}}
+  <div class="none">Click a player to select</div>
+  {{/if}}
+  {{> add_player}}
+</template>
+
+<template name="player">
+  <div class="player {{selected}}">
+    <span class="name">{{name}}</span>
+    <span class="score">{{score}}</span>
+  </div>
+</template>
+
+<template name='add_player'>
+  <div>
+    <button class="btn btn-default add">Add a New Scientist</button>
+  </div>
+  <form action="post" class="addForm">
+    Name: <input type="text" class="name_input">
+    Points: <input type="text" class="points_input">
+    <button class="btn btn-success" type="submit">Add</button>
+  </form>
+</template>
